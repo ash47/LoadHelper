@@ -22,3 +22,4 @@ A small library to make loading in dota 2 custom games more reliable by allowing
   - **loadHelper:** This will be true if the module successfully loaded
   - **loadHelperQuit**: This will be true if the Cancel Lobby button was used to close the lobby
   - **loadHelperTime**: This represents the total time, in second, it took from when the module first paused the game (when the host loaded), to when everybody was fully connected to the game. If the host chooses to pause the match again after everyone has connected, this extra pause time will NOT be counted.
+  - **hostSlotID** The slot of the hoster
