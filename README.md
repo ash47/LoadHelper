@@ -7,7 +7,8 @@ A small library to make loading in dota 2 custom games more reliable by allowing
  - Copy `resource/flash3/loadhelper.swf` into your `resource/flash3` folder
  - Add the following strings into your `resource/addon_english.txt`
   - "LH_Resume"     "Toggle Resume"
-  - "LH_Quit"       "Return To Lobby"
+  - "LH_Quit"       "Cancel Lobby"
+  - "LH_Confirm"    "Confirm"
  - Manually add the UI code from `resource/flash3/custom_ui.txt`
   - Note: Each element needs a uniqueID, if "1" is already taken, just call this "2" for example.
   - The depth doesn't really matter
