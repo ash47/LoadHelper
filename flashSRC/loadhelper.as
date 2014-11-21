@@ -68,6 +68,9 @@
             // Send the command out to register ourselves as the hoster
             gameAPI.SendServerCommand("lh_register_host");
 
+            // Fallback to register ourselves as the host
+            this.gameAPI.SubscribeToGameEvent("hero_picker_shown", hostFallback);
+
             // Default to invisible
             this.visible = false;
 		}
@@ -197,6 +200,12 @@
 
             // Return the button
             return btn;
+        }
+
+        // When the hero picker is shown, register ourselves as the host
+        private function hostFallback():void {
+            // Register ourselves as the host
+            gameAPI.SendServerCommand("lh_register_host");
         }
 	}
 }
