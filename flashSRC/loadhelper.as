@@ -36,8 +36,16 @@
         // The timer to hide the confirm button
         private var hideConfirm:Timer;
 
+        // Locks to prevent crashing
+        private var myLock:Number;
+        private static var mySharedLock:Number;
+
 		// called by the game engine when this .swf has finished loading
 		public function onLoaded():void {
+            // Store the lock
+            myLock = Math.random();
+            mySharedLock = myLock;
+
             // Hook host event
             gameAPI.SubscribeToGameEvent("lh_hostid", onGetHostID);
 
@@ -99,6 +107,8 @@
 
         // The server has sent us the host's ID
         private function onGetHostID(args:Object) {
+            if(myLock != mySharedLock) return;
+
             // Check if we already had the hostID
             if(hostID == -1) {
                 // Store the new hostID
@@ -129,6 +139,11 @@
 
 		// Runs once every second to ensure everything is good
         private function updateLoop(e:TimerEvent):void {
+            if(myLock != mySharedLock) {
+                if(timer != null) timer.stop();
+                return;
+            }
+
             // Workout if we are the host, and we should be displaying the content
             var shouldShow = globals.Game.GetState() <= 1;
             var isHost = hostID == globals.Players.GetLocalPlayer();
@@ -142,8 +157,10 @@
                 this.visible = true;
             } else {
                 // Kill the timer
-                timer.removeEventListener(TimerEvent.TIMER, updateLoop);
-                timer.stop();
+                if(timer != null) {
+                    timer.removeEventListener(TimerEvent.TIMER, updateLoop);
+                    timer.stop();
+                }
 
                 // Make invisible
                 this.visible = false;
@@ -161,12 +178,16 @@
 
         // When the resume button is pressed
         private function onResumePressed(e:MouseEvent):void {
+            if(myLock != mySharedLock) return;
+
             // Send the command to the server
             gameAPI.SendServerCommand("lh_resume_game");
         }
 
         // When the quit button is pressed
         private function onQuitPressed(e:MouseEvent):void {
+            if(myLock != mySharedLock) return;
+
             // Show the confirm button for 3 seconds
             buttonConfirm.visible = true;
 
@@ -184,6 +205,8 @@
 
         // When the confirm button is pressed
         private function onConfirmPressed(e:MouseEvent):void {
+            if(myLock != mySharedLock) return;
+
             // Send the command to the server
             gameAPI.SendServerCommand("lh_quit_game");
         }
@@ -204,6 +227,8 @@
 
         // When the hero picker is shown, register ourselves as the host
         private function hostFallback():void {
+            if(myLock != mySharedLock) return;
+
             // Register ourselves as the host
             gameAPI.SendServerCommand("lh_register_host");
         }
